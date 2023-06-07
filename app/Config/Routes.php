@@ -81,6 +81,7 @@ $routes->group('', ['filter' => 'isLoggedIn'], function ($routes) {
     $routes->resource('resource-produk', ['controller' => 'Resource\Produk', 'filter' => 'permission:Data Master']);
     $routes->get('resource-getdataproduk', 'Resource\Produk::getDataProduk', ['filter' => 'permission:Data Master']);
     $routes->post('resource-produkplan', 'Resource\ProdukPlan::create', ['filter' => 'permission:Data Master']);
+    $routes->get('resource-cek-exist-produk/(:any)', 'Resource\Produk::cekExistProduk/$1', ['filter' => 'permission:Data Master']);
 
     // Customer
     $routes->get('resource-customer', 'Resource\Customer::index', ['filter' => 'permission:Data Master']);

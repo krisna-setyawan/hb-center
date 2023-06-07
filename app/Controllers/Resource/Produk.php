@@ -681,4 +681,24 @@ class Produk extends ResourcePresenter
         session()->setFlashdata('pesan', 'Data berhasil dihapus.');
         return redirect()->to('/resource-produk');
     }
+
+
+    public function cekExistProduk($sku)
+    {
+        $modelProduk = new ProdukModel();
+
+        $produk = $modelProduk->where('sku', $sku)->first();
+
+        if ($produk) {
+            $json = [
+                'produk' => true
+            ];
+        } else {
+            $json = [
+                'produk' => false
+            ];
+        }
+
+        echo json_encode($json);
+    }
 }
