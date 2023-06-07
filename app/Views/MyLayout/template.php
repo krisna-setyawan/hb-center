@@ -28,7 +28,7 @@
         <!-- Navbar Brand-->
         <a class="navbar-brand ps-3" href="/beranda">
             <img src="assets/logo/logo-haebot.jpeg" class="rounded-circle me-2" width="19%" alt="logo">
-            <b> Haebot Store </b>
+            <b> Haebot Center </b>
         </a>
 
         <!-- Sidebar Toggle-->

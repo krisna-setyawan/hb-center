@@ -34,8 +34,8 @@ $routes->get('/', 'AuthController::login');
 
 
 // ------------------------------------------------------------------------------------------------------------------ API
-$routes->get('hbcapi-get-produks', 'Api\Produk::index');
-$routes->get('hbcapi-get-produk/(:any)', 'Api\Produk::show/$1');
+$routes->get('hbapi-get-produks', 'Api\Produk::index');
+$routes->get('hbapi-get-produk/(:any)', 'Api\Produk::show/$1');
 
 
 
@@ -112,6 +112,7 @@ $routes->group('', ['filter' => 'isLoggedIn'], function ($routes) {
     // Perusahaan
     $routes->get('resource-perusahaan', 'Resource\Perusahaan::index', ['filter' => 'permission:Data Master']);
     $routes->get('resource-perusahaan/(:any)', 'Resource\Perusahaan::show/$1', ['filter' => 'permission:Data Master']);
+    $routes->get('resource-perusahaan-produk/(:any)', 'Resource\Perusahaan::produk/$1', ['filter' => 'permission:Data Master']);
 
 
 

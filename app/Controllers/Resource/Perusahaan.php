@@ -65,4 +65,32 @@ class Perusahaan extends ResourcePresenter
 
         echo json_encode($json);
     }
+
+
+    public function produk($id_perusahaan = null)
+    {
+        $client = Services::curlrequest();
+        $url = $_ENV['URL_API'] . 'public/get-perusahaan/' . $id_perusahaan;
+        $response = $client->request('GET', $url);
+        $status = $response->getStatusCode();
+        $responseJson = $response->getBody();
+        $responseArray = json_decode($responseJson, true);
+        $perusahaan = $responseArray['data_perusahaan'][0];
+
+        // produk
+        $url_produk = $perusahaan['url'] . 'hbapi-get-produks';
+        $response_produk = $client->request('GET', $url_produk);
+        $status = $response_produk->getStatusCode();
+        $responseJsonProduk = $response_produk->getBody();
+        $responseArrayProduk = json_decode($responseJsonProduk, true);
+        $produk = $responseArrayProduk['products'];
+
+
+        $data = [
+            'perusahaan' => $perusahaan,
+            'produk' => $produk
+        ];
+
+        return view('resource/perusahaan/list_produk', $data);
+    }
 }
