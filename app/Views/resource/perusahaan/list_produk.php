@@ -41,7 +41,7 @@
                         <td><?= $pr['jenis'] ?></td>
                         <td>Rp. <?= number_format($pr['harga_jual'], 0, ',', '.') ?></td>
                         <td class="text-center">
-                            <a title="Copy Produk" class="px-2 py-0 btn btn-sm btn-outline-danger" onclick="copyProduk('<?= $pr['sku'] ?>')">
+                            <a title="Copy Produk" class="px-2 py-0 btn btn-sm btn-outline-danger" onclick="cekExistProduk('<?= $pr['sku'] ?>')">
                                 <i class="fa-fw fa-solid fa-circle-chevron-down"></i>
                             </a>
                         </td>
@@ -60,7 +60,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="judulModal">Tambah Produk</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" id="closeBtn" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="isiForm">
 
@@ -135,16 +135,6 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="harga_beli" class="col-sm-3 col-form-label">Harga Beli</label>
-                        <div class="col-sm-9">
-                            <div class="input-group">
-                                <span class="input-group-text">Rp.</span>
-                                <input type="text" class="form-control" id="form-harga_beli" name="harga_beli">
-                                <div class="invalid-feedback error-harga_beli"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
                         <label for="harga_jual" class="col-sm-3 col-form-label">Harga Jual</label>
                         <div class="col-sm-9">
                             <div class="input-group">
@@ -191,6 +181,11 @@
                                 <div class="invalid-feedback error-tinggi"></div>
                             </div>
                         </div>
+
+                        <input type="hidden" name="harga_beli" value="0">
+                        <input type="hidden" name="minimal_penjualan" value="0">
+                        <input type="hidden" name="kelipatan_penjualan" value="0">
+                        <input type="hidden" name="status_marketing" value="Belum desain">
                     </div>
 
                     <div class="col-md-9 offset-3 mb-3">
@@ -211,50 +206,67 @@
 <script>
     $(document).ready(function() {
         $('#tabel').dataTable();
-    })
 
-    function copyProduk(sku) {
-
-        cekExistProduk('hbc-produk1', function(result) {
-            console.log(result);
+        $("#form-id_kategori").select2({
+            theme: "bootstrap-5",
+            tags: true,
+            dropdownParent: $('#my-modal')
         });
 
-        // if (cekExistProduk('hbc-produk1') === 'produk ada') {
-        //     alert('ada')
-        // } else {
-        //     alert('tidak')
-        //     // cekExistProduk('hbc-produk1')
-        // }
+        $('#form-harga_jual').mask('000.000.000', {
+            reverse: true
+        });
+    })
 
-        // var apiUrl = '<?= $perusahaan['url'] ?>/hbapi-get-produk/' + sku;
 
-        // $.ajax({
-        //     url: apiUrl,
-        //     method: 'GET',
-        //     success: function(response) {
-        //         if (response.message === 'success') {
-        //             var product = response.product;
-        //             $('#form-nama').val(product.nama);
-        //             $('#form-nama').val(product.nama);
-        //         } else {
-        //             console.log('Gagal mengambil data produk.');
-        //         }
-        //     },
-        //     error: function() {
-        //         console.log('Terjadi kesalahan saat mengambil data produk.');
-        //     }
-        // });
-    }
 
-    function cekExistProduk(sku, callback) {
+    function copyProduk(sku) {
+        var apiUrl = '<?= $perusahaan['url'] ?>/hbapi-get-produk/' + sku;
+
         $.ajax({
-            url: '<?= site_url() ?>resource-cek-exist-produk/hbc-produk1',
+            url: apiUrl,
             method: 'GET',
             success: function(response) {
-                if (response.produk === true) {
-                    callback('produk ada');
+                if (response.message === 'success') {
+                    var product = response.product;
+                    $('#form-nama').val(product.nama);
+                    $('#form-sku').val(product.sku);
+                    $('#form-kategori').val(product.kategori);
+                    $('#form-hs_code').val(product.hs_code);
+                    $('#form-satuan').val(product.satuan);
+                    $('#form-tipe').val(product.tipe);
+                    $('#form-jenis').val(product.jenis);
+                    $('#form-berat').val(product.berat);
+                    $('#form-panjang').val(product.panjang);
+                    $('#form-lebar').val(product.lebar);
+                    $('#form-tinggi').val(product.tinggi);
+                    $('#my-modal').modal('toggle')
                 } else {
-                    callback('produk tidak ada');
+                    console.log('Gagal mengambil data produk.');
+                }
+            },
+            error: function() {
+                console.log('Terjadi kesalahan saat mengambil data produk.');
+            }
+        });
+    }
+
+
+
+    function cekExistProduk(sku) {
+        $.ajax({
+            url: '<?= site_url() ?>resource-cek-exist-produk/' + sku,
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (response.produk) {
+                    Swal.fire(
+                        'Opss.',
+                        'Produk dengan SKU ' + sku + ' sudah ada di data produk.',
+                        'error'
+                    )
+                } else {
+                    copyProduk(sku)
                 }
             },
             error: function() {
@@ -262,6 +274,166 @@
             }
         });
     }
+
+
+
+    $('#form').submit(function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: "post",
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            dataType: "json",
+            beforeSend: function() {
+                $('#tombolSimpan').html('Tunggu <i class="fa-solid fa-spin fa-spinner"></i>');
+                $('#tombolSimpan').prop('disabled', true);
+            },
+            complete: function() {
+                $('#tombolSimpan').html('Simpan <i class="fa-fw fa-solid fa-check"></i>');
+                $('#tombolSimpan').prop('disabled', false);
+            },
+            success: function(response) {
+                if (response.error) {
+                    let err = response.error;
+
+                    if (err.error_id_kategori) {
+                        $('.error-id_kategori').html(err.error_id_kategori);
+                        $('#form-id_kategori').addClass('is-invalid');
+                    } else {
+                        $('.error-id_kategori').html('');
+                        $('#form-id_kategori').removeClass('is-invalid');
+                        $('#form-id_kategori').addClass('is-valid');
+                    }
+                    if (err.error_sku) {
+                        $('.error-sku').html(err.error_sku);
+                        $('#form-sku').addClass('is-invalid');
+                    } else {
+                        $('.error-sku').html('');
+                        $('#form-sku').removeClass('is-invalid');
+                        $('#form-sku').addClass('is-valid');
+                    }
+                    if (err.error_hs_code) {
+                        $('.error-hs_code').html(err.error_hs_code);
+                        $('#form-hs_code').addClass('is-invalid');
+                    } else {
+                        $('.error-hs_code').html('');
+                        $('#form-hs_code').removeClass('is-invalid');
+                        $('#form-hs_code').addClass('is-valid');
+                    }
+                    if (err.error_nama) {
+                        $('.error-nama').html(err.error_nama);
+                        $('#form-nama').addClass('is-invalid');
+                    } else {
+                        $('.error-nama').html('');
+                        $('#form-nama').removeClass('is-invalid');
+                        $('#form-nama').addClass('is-valid');
+                    }
+                    if (err.error_satuan) {
+                        $('.error-satuan').html(err.error_satuan);
+                        $('#form-satuan').addClass('is-invalid');
+                    } else {
+                        $('.error-satuan').html('');
+                        $('#form-satuan').removeClass('is-invalid');
+                        $('#form-satuan').addClass('is-valid');
+                    }
+                    if (err.error_tipe) {
+                        $('.error-tipe').html(err.error_tipe);
+                        $('#form-tipe').addClass('is-invalid');
+                    } else {
+                        $('.error-tipe').html('');
+                        $('#form-tipe').removeClass('is-invalid');
+                        $('#form-tipe').addClass('is-valid');
+                    }
+                    if (err.error_jenis) {
+                        $('.error-jenis').html(err.error_jenis);
+                        $('#form-jenis').addClass('is-invalid');
+                    } else {
+                        $('.error-jenis').html('');
+                        $('#form-jenis').removeClass('is-invalid');
+                        $('#form-jenis').addClass('is-valid');
+                    }
+                    if (err.error_harga_jual) {
+                        $('.error-harga_jual').html(err.error_harga_jual);
+                        $('#form-harga_jual').addClass('is-invalid');
+                    } else {
+                        $('.error-harga_jual').html('');
+                        $('#form-harga_jual').removeClass('is-invalid');
+                        $('#form-harga_jual').addClass('is-valid');
+                    }
+                    if (err.error_stok) {
+                        $('.error-stok').html(err.error_stok);
+                        $('#form-stok').addClass('is-invalid');
+                    } else {
+                        $('.error-stok').html('');
+                        $('#form-stok').removeClass('is-invalid');
+                        $('#form-stok').addClass('is-valid');
+                    }
+                    if (err.error_berat) {
+                        $('.error-berat').html(err.error_berat);
+                        $('#form-berat').addClass('is-invalid');
+                    } else {
+                        $('.error-berat').html('');
+                        $('#form-berat').removeClass('is-invalid');
+                        $('#form-berat').addClass('is-valid');
+                    }
+                    if (err.error_panjang) {
+                        $('.error-panjang').html(err.error_panjang);
+                        $('#form-panjang').addClass('is-invalid');
+                    } else {
+                        $('.error-panjang').html('');
+                        $('#form-panjang').removeClass('is-invalid');
+                        $('#form-panjang').addClass('is-valid');
+                    }
+                    if (err.error_lebar) {
+                        $('.error-lebar').html(err.error_lebar);
+                        $('#form-lebar').addClass('is-invalid');
+                    } else {
+                        $('.error-lebar').html('');
+                        $('#form-lebar').removeClass('is-invalid');
+                        $('#form-lebar').addClass('is-valid');
+                    }
+                    if (err.error_tinggi) {
+                        $('.error-tinggi').html(err.error_tinggi);
+                        $('#form-tinggi').addClass('is-invalid');
+                    } else {
+                        $('.error-tinggi').html('');
+                        $('#form-tinggi').removeClass('is-invalid');
+                        $('#form-tinggi').addClass('is-valid');
+                    }
+                }
+                if (response.success) {
+                    $('#my-modal').modal('hide')
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: response.success,
+                    }).then((value) => {
+                        $('#tabel').DataTable().ajax.reload();
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Berhasil menambahkan produk'
+                        })
+                    })
+                }
+            },
+            error: function(e) {
+                alert('Error \n' + e.responseText);
+            }
+        });
+        return false
+    })
+
+
+    $('#closeBtn').click(function() {
+        var form = $('#form');
+
+        form[0].reset();
+
+        form.find('.is-invalid').removeClass('is-invalid');
+        form.find('.is-valid').removeClass('is-valid');
+        form.find('.invalid-feedback').hide();
+    });
 </script>
 
 

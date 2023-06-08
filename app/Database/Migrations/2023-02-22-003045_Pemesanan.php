@@ -12,6 +12,8 @@ class Pemesanan extends Migration
         $fields = [
             'id'                    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
             'id_supplier'           => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true],
+            'jenis_supplier'        => ['type' => 'enum', 'constraint' => ['Non-haebot', 'Haebot',], 'default' => 'Non-haebot', 'null' => true],
+            'id_perusahaan'         => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true],
             'id_user'               => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true],
             'no_pemesanan'          => ['type' => 'varchar', 'constraint' => 30],
             'tanggal'               => ['type' => 'date'],

@@ -202,13 +202,13 @@ class Produk extends ResourcePresenter
                         'required' => 'kategori produk harus diisi.',
                     ]
                 ],
-                'hs_code' => [
-                    'rules' => 'required|is_unique[produk.hs_code]',
-                    'errors' => [
-                        'required' => '{field} produk harus diisi.',
-                        'is_unique' => 'HS Code produk sudah ada dalam database.'
-                    ]
-                ],
+                // 'hs_code' => [
+                //     'rules' => 'required|is_unique[produk.hs_code]',
+                //     'errors' => [
+                //         'required' => '{field} produk harus diisi.',
+                //         'is_unique' => 'HS Code produk sudah ada dalam database.'
+                //     ]
+                // ],
                 'sku' => [
                     'rules' => 'required|is_unique[produk.sku]',
                     'errors' => [
@@ -250,7 +250,7 @@ class Produk extends ResourcePresenter
                 'harga_jual' => [
                     'rules' => 'required',
                     'errors' => [
-                        'required' => 'Harga beli produk harus diisi.',
+                        'required' => 'Harga jual produk harus diisi.',
                     ]
                 ],
                 'stok' => [
@@ -689,15 +689,9 @@ class Produk extends ResourcePresenter
 
         $produk = $modelProduk->where('sku', $sku)->first();
 
-        if ($produk) {
-            $json = [
-                'produk' => true
-            ];
-        } else {
-            $json = [
-                'produk' => false
-            ];
-        }
+        $json = [
+            'produk' => $produk
+        ];
 
         echo json_encode($json);
     }
