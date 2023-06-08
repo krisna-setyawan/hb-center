@@ -4,26 +4,22 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Pembelian extends Migration
+class FixingPemesanan extends Migration
 {
     public function up()
     {
-        // Pembelian
+        // Fixing Pemesanan
         $fields = [
             'id'                    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
             'id_pemesanan'          => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true],
-            'id_pemesanan_fixing'   => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true],
             'id_supplier'           => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true],
             'id_user'               => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true],
             'id_gudang'             => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true],
             'jenis_supplier'        => ['type' => 'enum', 'constraint' => ['Non-Haebot', 'Haebot'], 'default' => 'Non-Haebot'],
             'id_perusahaan'         => ['type' => 'varchar', 'constraint' => 30, 'null' => true],
-            'no_pembelian'          => ['type' => 'varchar', 'constraint' => 30],
             'invoice'               => ['type' => 'varchar', 'constraint' => 30],
             'tanggal'               => ['type' => 'date'],
-            'status'                => ['type' => 'enum', 'constraint' => ['Diproses', 'Dikirim', 'Sampai', 'Gagal'], 'default' => 'Fixing'],
-            'status_pembayaran'     => ['type' => 'enum', 'constraint' => ['Belum dibayar', 'Dibayar Sebagian', 'Lunas'], 'default' => 'Belum dibayar'],
-            'status_inbound'        => ['type' => 'enum', 'constraint' => ['Belum diterima', 'Diterima Sebagian', 'Diterima Semua'], 'default' => 'Belum diterima'],
+            'status'                => ['type' => 'enum', 'constraint' => ['Fixing', 'Waiting', 'Nego', 'Ok', 'Batal', 'Pembelian'], 'default' => 'Fixing'],
             'panjang'               => ['type' => 'int', 'constraint' => 11],
             'lebar'                 => ['type' => 'int', 'constraint' => 11],
             'tinggi'                => ['type' => 'int', 'constraint' => 11],
@@ -48,21 +44,20 @@ class Pembelian extends Migration
 
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);
-        $this->forge->addUniqueKey('no_pembelian');
         $this->forge->addForeignKey('id_pemesanan', 'pemesanan', 'id', '', 'CASCADE');
-        $this->forge->addForeignKey('id_pemesanan_fixing', 'pemesanan_fixing', 'id', '', 'CASCADE');
         $this->forge->addForeignKey('id_supplier', 'supplier', 'id', '', 'CASCADE');
         $this->forge->addForeignKey('id_user', 'users', 'id', '', 'CASCADE');
         $this->forge->addForeignKey('id_gudang', 'gudang', 'id', '', 'CASCADE');
-        $this->forge->createTable('pembelian', true);
+        $this->forge->createTable('pemesanan_fixing', true);
 
 
 
-        // Pembelian List Produk
+        // pemesanan fixing List Produk
         $fields = [
             'id'                    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
-            'id_pembelian'          => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+            'id_pemesanan_fixing'   => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
             'id_produk'             => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+            'sku'                   => ['type' => 'varchar', 'constraint' => 80],
             'qty'                   => ['type' => 'int', 'unsigned' => true],
             'harga_satuan'          => ['type' => 'int', 'unsigned' => true],
             'total_harga'           => ['type' => 'int', 'unsigned' => true],
@@ -70,14 +65,14 @@ class Pembelian extends Migration
 
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('id_pembelian', 'pembelian', 'id', '', 'CASCADE');
+        $this->forge->addForeignKey('id_pemesanan_fixing', 'pemesanan_fixing', 'id', '', 'CASCADE');
         $this->forge->addForeignKey('id_produk', 'produk', 'id', '', 'CASCADE');
-        $this->forge->createTable('pembelian_detail', true);
+        $this->forge->createTable('pemesanan_fixing_detail', true);
     }
 
     public function down()
     {
-        $this->forge->dropTable('pembelian_detail');
-        $this->forge->dropTable('pembelian');
+        $this->forge->dropTable('pemesanan_fixing_detail');
+        $this->forge->dropTable('pemesanan_fixing');
     }
 }

@@ -69,21 +69,21 @@
                     <?= csrf_field() ?>
 
                     <div class="row mb-3">
-                        <label for="nama" class="col-sm-3 col-form-label">Nama Produk</label>
+                        <label for="form-nama" class="col-sm-3 col-form-label">Nama Produk</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" id="form-nama" name="nama" autofocus>
                             <div class="invalid-feedback error-nama"></div>
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="sku" class="col-sm-3 col-form-label">SKU</label>
+                        <label for="form-sku" class="col-sm-3 col-form-label">SKU</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" id="form-sku" name="sku" autofocus>
                             <div class="invalid-feedback error-sku"></div>
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="id_kategori" class="col-sm-3 col-form-label">Kategori</label>
+                        <label for="form-id_kategori" class="col-sm-3 col-form-label">Kategori</label>
                         <div class="col-sm-9">
                             <select class="form-control" name="id_kategori" id="form-id_kategori">
                                 <?php foreach ($kategori as $kt) : ?>
@@ -94,14 +94,14 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="hs_code" class="col-sm-3 col-form-label">HS Code</label>
+                        <label for="form-hs_code" class="col-sm-3 col-form-label">HS Code</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" id="form-hs_code" name="hs_code" autofocus>
                             <div class="invalid-feedback error-hs_code"></div>
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="satuan" class="col-sm-3 col-form-label">Satuan</label>
+                        <label for="form-satuan" class="col-sm-3 col-form-label">Satuan</label>
                         <div class="col-sm-9">
                             <select class="form-control" name="satuan" id="form-satuan">
                                 <option value=""></option>
@@ -112,7 +112,7 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="tipe" class="col-sm-3 col-form-label">Tipe</label>
+                        <label for="form-tipe" class="col-sm-3 col-form-label">Tipe</label>
                         <div class="col-sm-9">
                             <select class="form-control" name="tipe" id="form-tipe">
                                 <option value=""></option>
@@ -124,7 +124,7 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="jenis" class="col-sm-3 col-form-label">Jenis Produk</label>
+                        <label for="form-jenis" class="col-sm-3 col-form-label">Jenis Produk</label>
                         <div class="col-sm-9">
                             <select class="form-control" name="jenis" id="form-jenis">
                                 <option value=""></option>
@@ -135,7 +135,17 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="harga_jual" class="col-sm-3 col-form-label">Harga Jual</label>
+                        <label for="form-harga_beli" class="col-sm-3 col-form-label">Harga Beli</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <span class="input-group-text">Rp.</span>
+                                <input type="text" class="form-control" id="form-harga_beli" name="harga_beli">
+                                <div class="invalid-feedback error-harga_beli"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="form-harga_jual" class="col-sm-3 col-form-label">Harga Jual</label>
                         <div class="col-sm-9">
                             <div class="input-group">
                                 <span class="input-group-text">Rp.</span>
@@ -145,14 +155,14 @@
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label for="stok" class="col-sm-3 col-form-label">Stok Awal</label>
+                        <label for="form-stok" class="col-sm-3 col-form-label">Stok Awal</label>
                         <div class="col-sm-9">
                             <input type="number" min="0" class="form-control" id="form-stok" name="stok" value="0">
                             <div class="invalid-feedback error-stok"></div>
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <label for="berat" class="col-sm-3 col-form-label">Berat</label>
+                        <label for="form-berat" class="col-sm-3 col-form-label">Berat</label>
                         <div class="col-sm-9">
                             <input type="number" min="0" class="form-control" id="form-berat" name="berat">
                             <div class="invalid-feedback error-berat"></div>
@@ -182,7 +192,6 @@
                             </div>
                         </div>
 
-                        <input type="hidden" name="harga_beli" value="0">
                         <input type="hidden" name="minimal_penjualan" value="0">
                         <input type="hidden" name="kelipatan_penjualan" value="0">
                         <input type="hidden" name="status_marketing" value="Belum desain">
@@ -236,6 +245,7 @@
                     $('#form-satuan').val(product.satuan);
                     $('#form-tipe').val(product.tipe);
                     $('#form-jenis').val(product.jenis);
+                    $('#form-harga_beli').val(product.harga_jual);
                     $('#form-berat').val(product.berat);
                     $('#form-panjang').val(product.panjang);
                     $('#form-lebar').val(product.lebar);
@@ -352,6 +362,14 @@
                         $('.error-jenis').html('');
                         $('#form-jenis').removeClass('is-invalid');
                         $('#form-jenis').addClass('is-valid');
+                    }
+                    if (err.error_harga_beli) {
+                        $('.error-harga_beli').html(err.error_harga_beli);
+                        $('#form-harga_beli').addClass('is-invalid');
+                    } else {
+                        $('.error-harga_beli').html('');
+                        $('#form-harga_beli').removeClass('is-invalid');
+                        $('#form-harga_beli').addClass('is-valid');
                     }
                     if (err.error_harga_jual) {
                         $('.error-harga_jual').html(err.error_harga_jual);
