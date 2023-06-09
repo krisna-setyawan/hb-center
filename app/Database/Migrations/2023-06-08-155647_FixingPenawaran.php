@@ -4,11 +4,11 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class FixingPenjualan extends Migration
+class FixingPenawaran extends Migration
 {
     public function up()
     {
-        // Fixing Penjualan
+        // Fixing Penawaran
         $fields = [
             'id'                    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
             'id_penawaran'          => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true],
@@ -46,14 +46,14 @@ class FixingPenjualan extends Migration
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('id_customer', 'customer', 'id', '', 'CASCADE');
         $this->forge->addForeignKey('id_user', 'users', 'id', '', 'CASCADE');
-        $this->forge->createTable('penjualan_fixing', true);
+        $this->forge->createTable('penawaran_fixing', true);
 
 
 
         // Penjualan List Produk
         $fields = [
             'id'                    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
-            'id_penjualan_fixing'   => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+            'id_penawaran_fixing'   => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
             'id_produk'             => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
             'sku'                   => ['type' => 'varchar', 'constraint' => 80],
             'qty'                   => ['type' => 'int', 'unsigned' => true],
@@ -67,13 +67,14 @@ class FixingPenjualan extends Migration
 
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('id_penjualan_fixing', 'penjualan_fixing', 'id', '', 'CASCADE');
+        $this->forge->addForeignKey('id_penawaran_fixing', 'penawaran_fixing', 'id', '', 'CASCADE');
         $this->forge->addForeignKey('id_produk', 'produk', 'id', '', 'CASCADE');
-        $this->forge->createTable('penjualan_fixing_detail', true);
+        $this->forge->createTable('penawaran_fixing_detail', true);
     }
 
     public function down()
     {
-        //
+        $this->forge->dropTable('penawaran_fixing_detail');
+        $this->forge->dropTable('penawaran_fixing');
     }
 }

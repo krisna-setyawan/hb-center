@@ -30,6 +30,7 @@ class Penjualan extends Migration
             'jasa_kirim'            => ['type' => 'varchar', 'constraint' => 80, 'null' => true],
             'diskon'                => ['type' => 'int', 'constraint' => 11],
             'grand_total'           => ['type' => 'int', 'constraint' => 11],
+            'kode_promo'            => ['type' => 'varchar', 'constraint' => 250, 'null' => true],
 
             'nama_alamat'           => ['type' => 'varchar', 'constraint' => 80, 'null' => true],
             'id_provinsi'           => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'null' => true],
@@ -40,9 +41,7 @@ class Penjualan extends Migration
             'penerima'              => ['type' => 'varchar', 'constraint' => 80, 'null' => true],
             'no_telp'               => ['type' => 'varchar', 'constraint' => 20, 'null' => true],
 
-            'kode_promo'            => ['type' => 'varchar', 'constraint' => 250, 'null' => true],
             'catatan'               => ['type' => 'varchar', 'constraint' => 250, 'null' => true],
-            'alasan_dihapus'        => ['type' => 'varchar', 'constraint' => 150, 'null' => true],
             'created_at'            => ['type' => 'datetime', 'null' => true],
             'updated_at'            => ['type' => 'datetime', 'null' => true],
             'deleted_at'            => ['type' => 'datetime', 'null' => true],
@@ -66,6 +65,7 @@ class Penjualan extends Migration
             'id'                    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
             'id_penjualan'          => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
             'id_produk'             => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+            'sku'                   => ['type' => 'varchar', 'constraint' => 80],
             'qty'                   => ['type' => 'int', 'unsigned' => true],
             'harga_satuan'          => ['type' => 'int', 'unsigned' => true],
             'diskon'                => ['type' => 'int', 'unsigned' => true],

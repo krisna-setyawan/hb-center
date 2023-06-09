@@ -25,21 +25,20 @@
 
                 <input type="hidden" name="_method" value="PUT">
 
-                <div class="row mb-3">
-                    <label for="perusahaan" class="col-sm-2 col-form-label">Perusahaan</label>
-                    <div class="col-sm-10">
-                        <select class="form-control" name="perusahaan" id="perusahaan">
-                            <option value="Non Haebot">Non Haebot</option>
-                            <?php foreach ($perusahaan as $prs) :
-                                if ($prs['id_perusahaan'] != $id_perusahaan) { ?>
-                                    <option <?= ($prs['id_perusahaan'] == $supplier['id_perusahaan']) ? 'selected' : '' ?> data-id="<?= $prs['id'] ?>" value="<?= $prs['nama'] ?>"><?= $prs['nama'] ?></option>
-                                <?php } ?>
-                            <?php endforeach ?>
-                        </select>
-                    </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-secondary" for="id_customer">Perusahaan</label>
+                    <select class="form-control" name="perusahaan" id="perusahaan">
+                        <option value="Non Haebot">Non Haebot</option>
+                        <?php foreach ($perusahaan as $prs) :
+                            if ($prs['id_perusahaan'] != $id_perusahaan) { ?>
+                                <option <?= ($prs['id_perusahaan'] == $customer['id_perusahaan']) ? 'selected' : '' ?> data-id="<?= $prs['id_perusahaan'] ?>" value="<?= $prs['nama'] ?>"><?= $prs['nama'] ?></option>
+                            <?php } ?>
+                        <?php endforeach ?>
+                    </select>
                 </div>
 
-                <input type="hidden" id="id_perusahaan" name="id_perusahaan" value="<?= $supplier['id_perusahaan'] ?>">
+                <input type="hidden" id="id_perusahaan" name="id_perusahaan" value="<?= $customer['id_perusahaan'] ?>">
 
                 <div class="mb-3">
                     <label class="form-label text-secondary" for="id_customer">ID Customer</label>
