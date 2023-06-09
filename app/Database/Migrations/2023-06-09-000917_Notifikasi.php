@@ -12,6 +12,7 @@ class Notifikasi extends Migration
             'id'                    => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
             'untuk'                 => ['type' => 'enum', 'constraint' => ['Order', 'Pemesanan', 'Fixing Pemesanan', 'Pembelian', 'Fixing Penjualan'], 'null' => true, 'default' => null],
             'notif'                 => ['type' => 'varchar', 'constraint' => 250, 'null' => true],
+            'status'                => ['type' => 'enum', 'constraint' => ['Unread', 'Read'], 'default' => 'Unread'],
         ];
 
         $this->forge->addField($fields);

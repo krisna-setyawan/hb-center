@@ -323,39 +323,49 @@
 
 
     $('#kirim_pemesanan').click(function() {
-        let id_pemesanan = '<?= $pemesanan['id'] ?>'
-        $.ajax({
-            type: "post",
-            url: "<?= site_url() ?>purchase-check_list_produk",
-            data: 'id_pemesanan=' + id_pemesanan,
-            dataType: "json",
-            success: function(response) {
-                if (response.ok) {
-                    Swal.fire({
-                        title: 'Konfirmasi?',
-                        text: "Apakah yakin mengirim pemesanan ini ke supplier?",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ya, Lanjut!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $('#form_pemesanan').submit();
-                        }
-                    })
-                } else {
-                    Swal.fire(
-                        'Opss.',
-                        'Tidak ada produk dalam pemesanan. pilih minimal satu produk dulu!',
-                        'error'
-                    )
+        if ($('#gudang').val() == '') {
+            $('#gudang').removeClass('is-valid');
+            $('#gudang').addClass('is-invalid');
+        } else {
+            $('#gudang').addClass('is-valid');
+            $('#gudang').removeClass('is-invalid');
+        }
+
+        if ($('#gudang').val() != '') {
+            let id_pemesanan = '<?= $pemesanan['id'] ?>'
+            $.ajax({
+                type: "post",
+                url: "<?= site_url() ?>purchase-check_list_produk",
+                data: 'id_pemesanan=' + id_pemesanan,
+                dataType: "json",
+                success: function(response) {
+                    if (response.ok) {
+                        Swal.fire({
+                            title: 'Konfirmasi?',
+                            text: "Apakah yakin mengirim pemesanan ini ke supplier?",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ya, Lanjut!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $('#form_pemesanan').submit();
+                            }
+                        })
+                    } else {
+                        Swal.fire(
+                            'Opss.',
+                            'Tidak ada produk dalam pemesanan. pilih minimal satu produk dulu!',
+                            'error'
+                        )
+                    }
+                },
+                error: function(e) {
+                    alert('Error \n' + e.responseText);
                 }
-            },
-            error: function(e) {
-                alert('Error \n' + e.responseText);
-            }
-        });
+            });
+        }
     })
 </script>
 

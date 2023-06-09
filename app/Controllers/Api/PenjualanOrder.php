@@ -56,7 +56,7 @@ class PenjualanOrder extends ResourceController
         $response = [
             'status'   => 201,
             'error'    => null,
-            'messages' => 'Berhasil kirim notifikasi.'
+            'messages' => 'Berhasil sent Order Pemesanan.'
         ];
         return $this->respondCreated($response);
     }

@@ -217,6 +217,7 @@ class Pemesanan extends ResourcePresenter
         $modelSupplier = new SupplierModel();
         $supplier = $modelSupplier->find($this->request->getPost('id_supplier'));
 
+        $pesanFlash = '';
 
         if ($supplier['jenis_supplier'] == 'Haebot') {
             $client = Services::curlrequest();
@@ -235,7 +236,7 @@ class Pemesanan extends ResourcePresenter
                 'id_pemesanan'      => $pemesanan['id'],
                 'no_pemesanan'      => $this->request->getVar('no_pemesanan'),
                 'id_perusahaan'     => $this->request->getVar('id_perusahaan'),
-                'nama_perusahaan'   => $perusahaan['nama'],
+                'nama_perusahaan'   => $_ENV['NAMA_PERUSAHAAN'],
                 'tanggal'           => $this->request->getVar('tanggal'),
                 'grand_total'       => $sum['total_harga'],
             ];
@@ -244,30 +245,31 @@ class Pemesanan extends ResourcePresenter
             ]);
             $responseBodySentOrder = json_decode($response_sent_order->getBody(), true);
 
+
             if ($response_sent_order->getStatusCode() === 201) {
 
                 // Sent Notif
                 $url_give_notif = $perusahaan['url'] . 'hbapi-give-notif';
                 $data_notif = [
                     'untuk' => 'Order',
-                    'notif' => 'Order masuk dari ' . $perusahaan['nama']
+                    'notif' => 'Order masuk dari ' . $_ENV['NAMA_PERUSAHAAN']
                 ];
                 $response_give_notif = $client->request('POST', $url_give_notif, [
                     'form_params' => $data_notif
                 ]);
-
                 $responseBodyNotif = json_decode($response_give_notif->getBody(), true);
 
                 if ($response_give_notif->getStatusCode() === 201) {
-                    $pesanFlash = "Berhasil kirim pemesanan ke " . $perusahaan['nama'] . " dan " . $responseBodyNotif['messages'];
+                    $pesanFlash .= "Berhasil kirim pemesanan ke " . $perusahaan['nama'] . " dan " . $responseBodyNotif['messages'];
                 } else {
-                    $pesanFlash = "Berhasil kirim pemesanan tapi Gagal mengirim Notif " . $responseBodyNotif['error'];
+                    $pesanFlash .= "Berhasil kirim pemesanan tapi Gagal mengirim Notif " . $responseBodyNotif['error'];
                 }
             } else {
-                $pesanFlash = "Gagal mengirim pemesanan " . $responseBodySentOrder['error'];
+                echo 'error';
+                $pesanFlash .= "Gagal mengirim pemesanan " . $responseBodySentOrder['error'];
             }
         } else {
-            $pesanFlash = "Status pemesanan berhasil diupdate ke Ordered.";
+            $pesanFlash .= "Status pemesanan berhasil diupdate ke Ordered.";
         }
 
 

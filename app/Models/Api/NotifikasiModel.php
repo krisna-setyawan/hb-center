@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Api;
 
 use CodeIgniter\Model;
 
@@ -13,7 +13,7 @@ class NotifikasiModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = false;
-    protected $allowedFields    = [];
+    protected $allowedFields    = ['untuk', 'notif'];
 
     // Dates
     protected $useTimestamps = false;

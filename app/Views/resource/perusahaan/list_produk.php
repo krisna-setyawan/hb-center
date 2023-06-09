@@ -137,11 +137,11 @@
                     <div class="row mb-3">
                         <label for="form-harga_beli" class="col-sm-3 col-form-label">Harga Beli</label>
                         <div class="col-sm-9">
-                            <div class="input-group">
-                                <span class="input-group-text">Rp.</span>
-                                <input type="text" class="form-control" id="form-harga_beli" name="harga_beli">
-                                <div class="invalid-feedback error-harga_beli"></div>
-                            </div>
+                            <!-- <div class="input-group"> -->
+                            <!-- <span class="input-group-text">Rp.</span> -->
+                            <input readonly type="text" class="form-control" id="form-harga_beli" name="harga_beli">
+                            <div class="invalid-feedback error-harga_beli"></div>
+                            <!-- </div> -->
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -222,6 +222,10 @@
             dropdownParent: $('#my-modal')
         });
 
+        $('#form-harga_beli').mask('000.000.000', {
+            reverse: true
+        });
+
         $('#form-harga_jual').mask('000.000.000', {
             reverse: true
         });
@@ -245,7 +249,7 @@
                     $('#form-satuan').val(product.satuan);
                     $('#form-tipe').val(product.tipe);
                     $('#form-jenis').val(product.jenis);
-                    $('#form-harga_beli').val(product.harga_jual);
+                    $('#form-harga_beli').val(format_rupiah(product.harga_jual));
                     $('#form-berat').val(product.berat);
                     $('#form-panjang').val(product.panjang);
                     $('#form-lebar').val(product.lebar);
@@ -426,12 +430,6 @@
                         icon: 'success',
                         title: 'Berhasil',
                         text: response.success,
-                    }).then((value) => {
-                        $('#tabel').DataTable().ajax.reload();
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'Berhasil menambahkan produk'
-                        })
                     })
                 }
             },
