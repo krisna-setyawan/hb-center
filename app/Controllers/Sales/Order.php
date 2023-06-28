@@ -8,7 +8,7 @@ use CodeIgniter\Config\Services;
 
 class Order extends ResourcePresenter
 {
-    protected $helpers = ['form'];
+    protected $helpers = ['form', 'api'];
 
     public function index()
     {
@@ -27,12 +27,7 @@ class Order extends ResourcePresenter
         $client = Services::curlrequest();
 
         // Get data perusahaan
-        $url_get_perusahaan = $_ENV['URL_API'] . 'public/get-perusahaan/' . $id_perusahaan;
-        $response_get_perusahaan = $client->request('GET', $url_get_perusahaan);
-        $status = $response_get_perusahaan->getStatusCode();
-        $responseJson = $response_get_perusahaan->getBody();
-        $responseArray = json_decode($responseJson, true);
-        $perusahaan = $responseArray['data_perusahaan'][0];
+        $perusahaan = get_data_perushaan($id_perusahaan);
 
         // Get data pemesanan
         $url_get_pemesanan = $perusahaan['url'] . 'public/hbapi-get-detail-pemesanan/' . $no_pemesanan;
